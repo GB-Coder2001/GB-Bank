@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GB Bank — Account Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="seal">GB</span>
+    <div class="brand-text">
+      <span class="brand-name">GB Bank</span>
+      <span class="brand-tag">Account Ledger &amp; Teller Desk</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="clock" id="liveClock">—</span>
+    <button class="btn btn-ghost" id="refreshBtn" title="Refresh ledger">Refresh</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="panel panel-open" aria-label="Open a new account">
+    <div class="panel-head">
+      <h2>Open new account</h2>
+      <span class="panel-eyebrow">New entry</span>
+    </div>
+    <form id="createForm" class="form-row">
+      <label class="field">
+        <span>Account holder name</span>
+        <input type="text" id="holderName" placeholder="e.g. Gowtham" required>
+      </label>
+      <label class="field field-amount">
+        <span>Opening balance (₹)</span>
+        <input type="number" id="openingBalance" placeholder="0.00" step="0.01" min="0" required>
+      </label>
+      <button type="submit" class="btn btn-primary">Open account</button>
+    </form>
+  </section>
+
+  <section class="panel panel-lookup" aria-label="Find an account">
+    <div class="panel-head">
+      <h2>Find account</h2>
+      <span class="panel-eyebrow">By ID</span>
+    </div>
+    <form id="lookupForm" class="form-row form-row-compact">
+      <label class="field">
+        <span>Account ID</span>
+        <input type="number" id="lookupId" placeholder="e.g. 3" min="1" required>
+      </label>
+      <button type="submit" class="btn btn-secondary">Look up</button>
+      <button type="button" class="btn btn-ghost" id="clearLookup">Show all</button>
+    </form>
+  </section>
+
+  <section class="panel panel-ledger" aria-label="Account ledger">
+    <div class="panel-head">
+      <h2>Account ledger</h2>
+      <span class="panel-eyebrow" id="acctCount">0 accounts</span>
+    </div>
+
+    <div id="ledgerEmpty" class="ledger-empty hidden">
+      <p>No accounts on this page yet. Open one above to start the ledger.</p>
+    </div>
+
+    <div class="table-scroll">
+      <table class="ledger-table">
+        <thead>
+          <tr>
+            <th class="col-id">ID</th>
+            <th class="col-name">Account holder</th>
+            <th class="col-balance">Balance</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ledgerBody">
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span>GB Bank — for demonstration and coursework purposes only. No real funds are held.</span>
+</footer>
+
+<!-- Amount modal (deposit / withdraw) -->
+<div class="modal-backdrop hidden" id="amountModalBackdrop">
+  <div class="modal stamp-card" role="dialog" aria-modal="true" aria-labelledby="amountModalTitle">
+    <div class="stamp-ring" id="modalStampRing">↵</div>
+    <h3 id="amountModalTitle">Deposit</h3>
+    <p class="modal-sub" id="amountModalSub">Account #—</p>
+    <label class="field">
+      <span>Amount (₹)</span>
+      <input type="number" id="amountInput" step="0.01" min="0.01" placeholder="0.00">
+    </label>
+    <p class="modal-error hidden" id="amountModalError"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="amountCancel">Cancel</button>
+      <button class="btn btn-primary" id="amountConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-backdrop hidden" id="deleteModalBackdrop">
+  <div class="modal stamp-card" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="stamp-ring stamp-ring-danger">✕</div>
+    <h3 id="deleteModalTitle">Close account</h3>
+    <p class="modal-sub" id="deleteModalSub">Account #—</p>
+    <p class="modal-warn">This closes the account permanently and cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="deleteCancel">Cancel</button>
+      <button class="btn btn-danger" id="deleteConfirm">Close account</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
